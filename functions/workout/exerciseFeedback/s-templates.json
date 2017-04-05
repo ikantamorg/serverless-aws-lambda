@@ -1,0 +1,10 @@
+{
+  "putFeedbackTemplate": {
+    "application/json": {
+      "userIdAndMachineId": "$context.authorizer.principalId",
+      "requestParams": "$input.json('$')",
+      "pathParams":"{#foreach($param in $input.params().path.keySet()) \"$param\": \"$util.escapeJavaScript($input.params().path.get($param))\"#if($foreach.hasNext),#end #end}",
+      "exercise_id": "$input.params('exercise_id')"
+    }
+  }
+}

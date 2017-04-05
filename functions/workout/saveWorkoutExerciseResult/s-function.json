@@ -1,0 +1,94 @@
+{
+  "name": "saveWorkoutExerciseResult",
+  "runtime": "nodejs4.3",
+  "description": "Serverless Lambda function for project: blum-serverless",
+  "customName": false,
+  "customRole": false,
+  "handler": "handler.handler",
+  "timeout": 6,
+  "memorySize": 1024,
+  "authorizer": {},
+  "custom": {
+    "optimize": {
+      "exclude": [ "aws-sdk" ],
+      "transforms": [
+        {
+          "name": "babelify",
+          "opts": {
+            "presets": [
+              "es2015"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "endpoints": [
+    {
+      "path": "workout/exercise/{exercise_id}/result",
+      "method": "POST",
+      "type": "AWS",
+      "authorizationType": "CUSTOM",
+      "authorizerFunction": "machineAuth",
+      "apiKeyRequired": false,
+      "requestParameters": {},
+      "requestTemplates": "$${requestTemplate}",
+      "responses": {
+        "400": {
+          "statusCode": "400"
+        },
+        "422": {
+          "statusCode": "422",
+          "selectionPattern": ".*\"status\":422.*",
+          "responseModels": {
+            "application/json;charset=UTF-8": "Empty"
+          },
+          "responseTemplates": {
+            "application/json;charset=UTF-8": "$input.path('$.errorMessage')"
+          }
+        },
+        "404": {
+          "statusCode": "404",
+          "selectionPattern": ".*\"status\":404.*",
+          "responseModels": {
+            "application/json;charset=UTF-8": "Empty"
+          },
+          "responseTemplates": {
+            "application/json;charset=UTF-8": "$input.path('$.errorMessage')"
+          }
+        },
+        "500": {
+          "statusCode": "500",
+          "selectionPattern": ".*\"status\":500.*",
+          "responseModels": {
+            "application/json;charset=UTF-8": "Empty"
+          },
+          "responseTemplates": {
+            "application/json;charset=UTF-8": "$input.path('$.errorMessage')"
+          }
+        },
+        "default": {
+          "statusCode": "200",
+          "responseParameters": {},
+          "responseModels": {
+            "application/json;charset=UTF-8": "Empty"
+          },
+          "responseTemplates": {
+            "application/json;charset=UTF-8": ""
+          }
+        }
+      }
+    }
+  ],
+  "events": [],
+  "environment": {
+    "SERVERLESS_PROJECT": "${project}",
+    "SERVERLESS_STAGE": "${stage}",
+    "SERVERLESS_REGION": "${region}",
+    "SERVERLESS_DATABASE": "${database}"
+  },
+  "vpc": {
+    "securityGroupIds": [],
+    "subnetIds": []
+  }
+}

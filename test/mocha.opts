@@ -1,0 +1,5 @@
+--reporter nyan
+--use_strict
+--ui bdd
+--recursive
+--timeout 10000

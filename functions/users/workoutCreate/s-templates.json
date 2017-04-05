@@ -1,0 +1,7 @@
+{
+  "workoutCreateTemplate": {
+    "application/json": {
+      "user_tag": "$input.params('user_tag')"
+    }
+  }
+}

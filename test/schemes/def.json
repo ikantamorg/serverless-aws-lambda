@@ -1,0 +1,5390 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "0.1.1",
+    "title": "Blum",
+    "description": "Blm"
+  },
+  "paths": {
+    "/admin/dashboard": {
+      "get": {
+        "description": "Admin dashboard provides list of clients in gym and array of users, who're waiting checkup.",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "clients": {
+                  "$ref": "#/definitions/gymUsers"
+                },
+                "checkup_due_list": {
+                  "description": "Array of checkup info",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "user_id": {
+                        "type": "integer",
+                        "format": "int32"
+                      },
+                      "checkup_id": {
+                        "type": "integer",
+                        "format": "int32"
+                      },
+                      "program_level": {
+                        "type": "string"
+                      },
+                      "user_name": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of machine & admin keys"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/admin/duelist": {
+      "get": {
+        "description": "Admin dashboard provides list of clients in gym and array of users, who're waiting checkup.",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/UserInfo"
+              }
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of machine & admin keys"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/admin/settings": {
+      "put": {
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
+        "description": "Update admin settings",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "language",
+            "type": "string",
+            "in": "formData"
+          },
+          {
+            "name": "unit_of_weight",
+            "type": "string",
+            "in": "formData"
+          },
+          {
+            "name": "unit_of_length",
+            "type": "string",
+            "in": "formData"
+          },
+          {
+            "name": "notification_frequency",
+            "type": "object",
+            "properties": {
+              "1": {
+                "type": "boolean"
+              },
+              "5": {
+                "type": "boolean"
+              },
+              "10": {
+                "type": "boolean"
+              },
+              "15": {
+                "type": "boolean"
+              },
+              "20": {
+                "type": "boolean"
+              },
+              "25": {
+                "type": "boolean"
+              },
+              "30": {
+                "type": "boolean"
+              },
+              "45": {
+                "type": "boolean"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/AdminSettings"
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of machine & user keys"
+          },
+          "422": {
+            "description": "Validation Errors"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "get": {
+        "description": "Get admin settings",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/AdminSettings"
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of machine & user keys"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/admin/questionnaire": {
+      "get": {
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
+        "description": "List of all questions",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Questions"
+              }
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of tablet & admin keys"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/admin/login": {
+      "post": {
+        "security": [
+          {
+            "adminTabletAuth": []
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "type": "string",
+            "in": "formData"
+          },
+          {
+            "name": "password",
+            "type": "string",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "object",
+              "additionalProperties": false,
+              "minProperties": 2,
+              "properties": {
+                "token": {
+                  "type": "string"
+                },
+                "tag": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "invalid email or password"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/admin-tablet/state": {
+      "put": {
+        "security": [
+          {
+            "adminTabletAuth": []
+          }
+        ],
+        "description": "Update machine state",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "ip",
+            "in": "formData",
+            "type": "string"
+          },
+          {
+            "name": "gyms_admin_token",
+            "in": "formData",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "formData",
+            "description": "AT status",
+            "type": "boolean"
+          },
+          {
+            "name": "uptime",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "last_used",
+            "type": "string",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AdminTabletState"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "422": {
+            "description": "Validation errors",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/admin-tablet/log": {
+      "post": {
+        "security": [
+          {
+            "adminTabletAuth": []
+          }
+        ],
+        "description": "Create new log entry for AT",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "type": "string",
+            "in": "formData"
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "in": "formData"
+          },
+          {
+            "name": "gyms_admin_id",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "data",
+            "type": "string",
+            "in": "formData",
+            "description": "JSON string"
+          },
+          {
+            "name": "created_at",
+            "type": "integer",
+            "description": "unix timestamp, int",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/AdminTabletEventMarker"
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of machine & user keys"
+          },
+          "422": {
+            "description": "Validation Errors"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/admin-tablet/activate": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "tokens",
+            "type": "string",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/AdminTablet"
+            }
+          },
+          "401": {
+            "description": "invalid tokens"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/admin-tablet/status": {
+      "get": {
+        "security": [
+          {
+            "adminTabletAuth": []
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "tokens",
+            "type": "string",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/AdminTablet"
+            }
+          },
+          "401": {
+            "description": "invalid tokens"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/admin-tablet/in_gym": {
+      "get": {
+        "description": "List of all devices in gym",
+        "produces": [
+          "applcation/json"
+        ],
+        "security": [
+          {
+            "adminTabletAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "admin_tablets": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/AdminTablet"
+                  }
+                },
+                "machines": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Machine"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/checkup/exercise/{exercise_id}/result": {
+      "post": {
+        "security": [
+          {
+            "machineAuth": []
+          }
+        ],
+        "description": "Saving or updating Checkup Exercise Result",
+        "parameters": [
+          {
+            "name": "exercise_id",
+            "type": "string",
+            "required": true,
+            "in": "path"
+          },
+          {
+            "name": "balance",
+            "type": "number",
+            "format": "double",
+            "in": "formData"
+          },
+          {
+            "name": "movement",
+            "type": "number",
+            "format": "double",
+            "in": "formData"
+          },
+          {
+            "name": "completed",
+            "type": "boolean",
+            "in": "formData"
+          },
+          {
+            "name": "range",
+            "type": "number",
+            "format": "double",
+            "in": "formData"
+          },
+          {
+            "name": "symmetry",
+            "type": "number",
+            "format": "double",
+            "in": "formData"
+          },
+          {
+            "name": "strength",
+            "type": "number",
+            "format": "double",
+            "in": "formData"
+          },
+          {
+            "name": "qom",
+            "type": "number",
+            "format": "double",
+            "in": "formData"
+          },
+          {
+            "name": "time",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "date",
+            "type": "string",
+            "format": "date-time",
+            "in": "formData",
+            "required": true
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/CheckupExerciseResult"
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of keys"
+          },
+          "422": {
+            "description": "validation error"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "machineAuth": []
+          }
+        ],
+        "description": "Saving or updating Checkup Exercise Result",
+        "parameters": [
+          {
+            "name": "exercise_id",
+            "type": "string",
+            "required": true,
+            "in": "path"
+          },
+          {
+            "name": "file",
+            "type": "string",
+            "description": "Content which will be saved in S3",
+            "in": "formData"
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CheckupExerciseResult"
+              }
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of keys"
+          },
+          "422": {
+            "description": "validation error"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/exercise/{exercise_id}/disable-video": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "exercise_id",
+            "type": "integer",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user_id": {
+                  "type": "integer"
+                },
+                "machine_exercise_id": {
+                  "type": "integer"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updated_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of machine & user keys"
+          },
+          "404": {
+            "description": "resource not found"
+          },
+          "422": {
+            "description": "Validation Errors"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/machine/assets/{machine_type}": {
+      "get": {
+        "security": [
+          {
+            "machineAuth": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "machine_type",
+            "type": "string",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "videos": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "images": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of machine & user keys"
+          },
+          "422": {
+            "description": "Validation Errors"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/machine/activate": {
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "tokens",
+            "type": "string",
+            "in": "formData",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of machine & user keys"
+          },
+          "422": {
+            "description": "Validation Errors"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/machine/crash": {
+      "put": {
+        "security": [
+          {
+            "machineAuth": []
+          }
+        ],
+        "description": "Saving ARCA logs",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "reportId",
+            "type": "string",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "name": "androidVersion",
+            "type": "string",
+            "in": "formData"
+          },
+          {
+            "name": "appVersionName",
+            "type": "string",
+            "in": "formData"
+          },
+          {
+            "name": "appVersionCode",
+            "type": "string",
+            "in": "formData"
+          },
+          {
+            "name": "stackTrace",
+            "type": "string",
+            "in": "formData"
+          },
+          {
+            "name": "build",
+            "type": "string",
+            "in": "formData"
+          },
+          {
+            "name": "totalMemSize",
+            "type": "string",
+            "in": "formData"
+          },
+          {
+            "name": "availableMemSize",
+            "type": "string",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of machine & user keys"
+          },
+          "422": {
+            "description": "Validation Errors"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/machine/in_gym": {
+      "get": {
+        "description": "List of all devices in gym",
+        "produces": [
+          "applcation/json"
+        ],
+        "security": [
+          {
+            "machineAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "admin_tablets": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/AdminTablet"
+                  }
+                },
+                "machines": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Machine"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/machine/info": {
+      "get": {
+        "security": [
+          {
+            "machineAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Info about current machine",
+            "schema": {
+              "title": "Machine Data",
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of machine & user keys"
+          },
+          "422": {
+            "description": "Validation Errors"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/machine/log": {
+      "post": {
+        "security": [
+          {
+            "machineAuth": []
+          }
+        ],
+        "description": "Create new log entry",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "type": "string",
+            "in": "formData"
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "in": "formData"
+          },
+          {
+            "name": "user_tag",
+            "type": "string",
+            "in": "formData"
+          },
+          {
+            "name": "data",
+            "type": "string",
+            "in": "formData",
+            "description": "JSON string"
+          },
+          {
+            "name": "file",
+            "type": "string",
+            "in": "formData",
+            "description": "Base64 content string"
+          },
+          {
+            "name": "created_at",
+            "type": "integer",
+            "description": "unix timestamp, int",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/MachineEventMarker"
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of machine & user keys"
+          },
+          "422": {
+            "description": "Validation Errors"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/machine/state": {
+      "put": {
+        "security": [
+          {
+            "machineAuth": []
+          }
+        ],
+        "description": "Update machine state",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "ip",
+            "in": "formData",
+            "type": "string"
+          },
+          {
+            "name": "user_id",
+            "in": "formData",
+            "type": "integer"
+          },
+          {
+            "name": "program_time_left",
+            "in": "formData",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "exercise_time_left",
+            "in": "formData",
+            "type": "integer"
+          },
+          {
+            "name": "status",
+            "in": "formData",
+            "description": "Machine status",
+            "type": "boolean"
+          },
+          {
+            "name": "uptime",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "client_sessions",
+            "type": "string",
+            "in": "formData"
+          },
+          {
+            "name": "last_used",
+            "type": "string",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/StateEntry"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "422": {
+            "description": "Validation errors",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/machine/state/{machine_id}": {
+      "get": {
+        "security": [
+          {
+            "adminTabletAuth": []
+          }
+        ],
+        "description": "Return machine state by id in current gym",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "machine_id",
+            "type": "integer",
+            "required": true,
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/StateEntry"
+            }
+          },
+          "404": {
+            "description": "state is  not found"
+          }
+        }
+      }
+    },
+    "/user/checkup-comparison": {
+      "get": {
+        "security": [
+          {
+            "machineUserAuth": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "date",
+            "type": "string",
+            "required": true,
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "last": {
+                  "$ref": "#/definitions/CheckupResult"
+                },
+                "first": {
+                  "$ref": "#/definitions/CheckupResult"
+                },
+                "sessions": {
+                  "type": "integer"
+                },
+                "total_time": {
+                  "type": "integer"
+                },
+                "tests_completed": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of machine & user keys"
+          },
+          "422": {
+            "description": "Validation Errors"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/dashboard": {
+      "get": {
+        "security": [
+          {
+            "machineUserAuth": []
+          }
+        ],
+        "description": "Get user's dashboard",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "$ref": "#/definitions/Dashboard"
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of machine & user keys"
+          },
+          "422": {
+            "description": "Validation Errors"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/disable-disclaimer": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["user_id", "created_at", "updated_at", "id"],
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "user_id": {
+                  "type": "integer"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updated_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of machine & user keys"
+          },
+          "404": {
+            "description": "resource not found"
+          },
+          "422": {
+            "description": "Validation Errors"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/settings": {
+      "put": {
+        "security": [
+          {
+            "machineUserAuth": []
+          }
+        ],
+        "description": "Update user settings",
+        "operationId": "saveUserSettings",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "language",
+            "type": "string",
+            "in": "formData",
+            "enum": [
+              "ru",
+              "en"
+            ]
+          },
+          {
+            "name": "unit_of_weight",
+            "type": "string",
+            "enum": [
+              "kg",
+              "lb"
+            ],
+            "in": "formData"
+          },
+          {
+            "name": "unit_of_length",
+            "type": "string",
+            "enum": [
+              "m/cm",
+              "ft/in"
+            ],
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Settings"
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of machine & user keys"
+          },
+          "422": {
+            "description": "Validation Errors"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/info": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Fetch info about current user",
+        "description": "Returns a user identified by RFID token",
+        "operationId": "getUserInfo",
+        "security": [
+          {
+            "machineUserAuth": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/UserInfo"
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of machine & user keys"
+          },
+          "404": {
+            "description": "person not found"
+          }
+        }
+      }
+    },
+    "/user/workout": {
+      "post": {
+        "description": "Creates and returns new user workout",
+        "security": [
+          {
+            "machineUserAuth": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Program"
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of machine & user keys"
+          },
+          "404": {
+            "description": "Previous results don't exist"
+          }
+        }
+      }
+    },
+    "/user/{user_id}/info": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Fetch info about current user",
+        "description": "Returns a user information",
+        "parameters": [
+          {
+            "name": "user_id",
+            "type": "string",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/UserInfoAT"
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of machine & user keys"
+          },
+          "404": {
+            "description": "person not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Update user info",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
+        "description": "Updates a user identified by RFID token",
+        "operationId": "updateUserInfo",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body_measurements",
+            "in": "formData",
+            "description": "Body measurements(JSON)",
+            "type": "string"
+          },
+          {
+            "name": "user",
+            "in": "formData",
+            "description": "User fields (JSON)",
+            "type": "string"
+          },
+          {
+            "name": "user_id",
+            "type": "integer",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/UserInfo"
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of machine & user keys"
+          },
+          "404": {
+            "description": "person not found"
+          }
+        }
+      }
+    },
+    "/user/{user_id}/nextcheckup": {
+      "get": {
+        "description": "Returns a date for further checkup",
+        "parameters": [
+          {
+            "name": "user_id",
+            "type": "string",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "next_checkup": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of machine & user keys"
+          },
+          "404": {
+            "description": "person not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Update user info",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
+        "description": "Updates a user identified by RFID token",
+        "operationId": "updateUserInfo",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body_measurements",
+            "in": "formData",
+            "description": "Body measurements(JSON)",
+            "type": "string"
+          },
+          {
+            "name": "user",
+            "in": "formData",
+            "description": "User fields (JSON)",
+            "type": "string"
+          },
+          {
+            "name": "user_id",
+            "type": "integer",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/UserInfo"
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of machine & user keys"
+          },
+          "404": {
+            "description": "person not found"
+          }
+        }
+      }
+    },
+    "/user/{user_id}/questionnaire": {
+      "post": {
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
+        "description": "Create new version of questionnaire",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "name": "user_questionnaires[vigorous_phisical_activity]",
+            "type": "string",
+            "enum": [
+              "yes",
+              "no"
+            ],
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[vigorous_work_days_per_week]",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[vigorous_work_time_per_day]",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[moderate_work_intesity_activity]",
+            "type": "string",
+            "enum": [
+              "yes",
+              "no"
+            ],
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[moderate_work_days_per_week]",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[moderate_work_time_per_day]",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[walk_or_bike_for_more_than_10_min]",
+            "type": "string",
+            "enum": [
+              "yes",
+              "no"
+            ],
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[travel_days_per_week]",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[travel_time_per_day]",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[vigorous_intensity_sport]",
+            "type": "string",
+            "enum": [
+              "yes",
+              "no"
+            ],
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[vigorous_recreation_days_per_week]",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[vigorous_recreation_time_per_day]",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[moderate_intensity_sport]",
+            "type": "string",
+            "enum": [
+              "yes",
+              "no"
+            ],
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[moderate_recreation_days_per_week]",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[moderate_recreation_time_per_day]",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[sedentiary_sitting_or_reclining_per_day]",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[cardio_vascular_conditions]",
+            "type": "string",
+            "enum": [
+              "none",
+              "seriously",
+              "moderately"
+            ],
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[liver_conditions]",
+            "type": "string",
+            "enum": [
+              "none",
+              "seriously",
+              "moderately"
+            ],
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[kidney_conditions]",
+            "type": "string",
+            "enum": [
+              "none",
+              "seriously",
+              "moderately"
+            ],
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[endocrine_system_conditions]",
+            "type": "string",
+            "enum": [
+              "none",
+              "seriously",
+              "moderately"
+            ],
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[oncologic_conditions]",
+            "type": "string",
+            "enum": [
+              "none",
+              "seriously",
+              "moderately"
+            ],
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[operations_in_the_past_3_months]",
+            "type": "string",
+            "enum": [
+              "none",
+              "seriously",
+              "moderately"
+            ],
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[wrists_and_hands]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "user_questionnaires[shoulders]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "user_questionnaires[shoulder_blades]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "user_questionnaires[elbows]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "user_questionnaires[ankles_and_feet]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "user_questionnaires[hips]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "user_questionnaires[knees]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "user_questionnaires[cervical]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "user_questionnaires[diaphragm]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "user_questionnaires[lumbar]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "user_questionnaires[pelvis]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "user_questionnaires[thoracic]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "illness",
+            "type": "string",
+            "in": "formData",
+            "required": true,
+            "description": "JSON string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/Questionnaires"
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "post": {
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
+        "description": "Enroll new user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "user[email]",
+            "type": "string",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "name": "user[first_name]",
+            "type": "string",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "name": "user[last_name]",
+            "type": "string",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "name": "user[gender]",
+            "type": "integer",
+            "in": "formData",
+            "enum": [
+              0,
+              1
+            ],
+            "required": true
+          },
+          {
+            "name": "user[date_of_birthday]",
+            "type": "string",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "name": "user[phone]",
+            "type": "string",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "name": "user[postal_address_line_1]",
+            "type": "string",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "name": "user[postal_address_line_2]",
+            "type": "string",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "name": "user[address_line_1]",
+            "type": "string",
+            "in": "formData"
+          },
+          {
+            "name": "user[address_line_2]",
+            "type": "string",
+            "in": "formData"
+          },
+          {
+            "name": "user[post_address_as_main_address]",
+            "type": "boolean",
+            "in": "formData"
+          },
+          {
+            "name": "user[city]",
+            "type": "string",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "name": "user[state]",
+            "type": "string",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "name": "user[country]",
+            "type": "string",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "name": "user[zip_code]",
+            "type": "string",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "name": "user[emergency_contact_name]",
+            "type": "string",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "name": "user[emergency_contact_phone]",
+            "type": "string",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "name": "body_measurements[height]",
+            "type": "number",
+            "format": "double",
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "body_measurements[weight]",
+            "type": "number",
+            "format": "double",
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "body_measurements[chest]",
+            "type": "number",
+            "format": "double",
+            "in": "formData"
+          },
+          {
+            "name": "body_measurements[arm]",
+            "type": "number",
+            "format": "double",
+            "in": "formData"
+          },
+          {
+            "name": "body_measurements[waist]",
+            "type": "number",
+            "format": "double",
+            "in": "formData"
+          },
+          {
+            "name": "body_measurements[hips]",
+            "type": "number",
+            "format": "double",
+            "in": "formData"
+          },
+          {
+            "name": "body_measurements[thigh]",
+            "type": "number",
+            "format": "double",
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[vigorous_phisical_activity]",
+            "type": "string",
+            "enum": [
+              "yes",
+              "no"
+            ],
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[vigorous_work_days_per_week]",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[vigorous_work_time_per_day]",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[moderate_work_intesity_activity]",
+            "type": "string",
+            "enum": [
+              "yes",
+              "no"
+            ],
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[moderate_work_days_per_week]",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[moderate_work_time_per_day]",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[walk_or_bike_for_more_than_10_min]",
+            "type": "string",
+            "enum": [
+              "yes",
+              "no"
+            ],
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[travel_days_per_week]",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[travel_time_per_day]",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[vigorous_intensity_sport]",
+            "type": "string",
+            "enum": [
+              "yes",
+              "no"
+            ],
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[vigorous_recreation_days_per_week]",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[vigorous_recreation_time_per_day]",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[moderate_intensity_sport]",
+            "type": "string",
+            "enum": [
+              "yes",
+              "no"
+            ],
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[moderate_recreation_days_per_week]",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[moderate_recreation_time_per_day]",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[sedentiary_sitting_or_reclining_per_day]",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[cardio_vascular_conditions]",
+            "type": "string",
+            "enum": [
+              "none",
+              "seriously",
+              "moderately"
+            ],
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[liver_conditions]",
+            "type": "string",
+            "enum": [
+              "none",
+              "seriously",
+              "moderately"
+            ],
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[kidney_conditions]",
+            "type": "string",
+            "enum": [
+              "none",
+              "seriously",
+              "moderately"
+            ],
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[endocrine_system_conditions]",
+            "type": "string",
+            "enum": [
+              "none",
+              "seriously",
+              "moderately"
+            ],
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[oncologic_conditions]",
+            "type": "string",
+            "enum": [
+              "none",
+              "seriously",
+              "moderately"
+            ],
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[operations_in_the_past_3_months]",
+            "type": "string",
+            "enum": [
+              "none",
+              "seriously",
+              "moderately"
+            ],
+            "required": true,
+            "in": "formData"
+          },
+          {
+            "name": "user_questionnaires[wrists_and_hands]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "user_questionnaires[shoulders]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "user_questionnaires[shoulder_blades]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "user_questionnaires[elbows]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "user_questionnaires[ankles_and_feet]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "user_questionnaires[hips]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "user_questionnaires[knees]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "user_questionnaires[cervical]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "user_questionnaires[diaphragm]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "user_questionnaires[lumbar]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "user_questionnaires[pelvis]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "user_questionnaires[thoracic]",
+            "type": "integer",
+            "in": "formData",
+            "required": true,
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          {
+            "name": "user_questionnaires[illness]",
+            "type": "string",
+            "in": "formData",
+            "required": true,
+            "description": "JSON string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/UserInfo"
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of AT & Admin keys"
+          },
+          "422": {
+            "description": "Validation Errors"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/users/{user_id}/status": {
+      "put": {
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
+        "description": "Change user status",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "type": "integer",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "status",
+            "type": "integer",
+            "in": "formData",
+            "enum": [
+              0,
+              1
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/UserInfo"
+            }
+          },
+          "401": {
+            "description": "api key not provided or AT is suspended"
+          },
+          "403": {
+            "description": "Incorrect admin token or Admin is suspended or \nAdmin and user are from differente institutions\n"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "422": {
+            "description": "Validation Errors"
+          }
+        }
+      }
+    },
+    "/user/{user_id}/rfid": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
+        "description": "Change user RFID",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "type": "integer",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/UserInfo"
+            }
+          },
+          "401": {
+            "description": "api key not provided or AT is suspended"
+          },
+          "403": {
+            "description": "Incorrect admin token or Admin is suspended or \nAdmin and user are from differente institutions\n"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "422": {
+            "description": "Validation Errors"
+          }
+        }
+      }
+    },
+    "/gyms/{gym_id}/users": {
+      "get": {
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
+        "description": "List of users in a gym",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "gym_id",
+            "type": "integer",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/gymUsers"
+            }
+          },
+          "401": {
+            "description": "api key not provided or AT is suspended"
+          },
+          "403": {
+            "description": "Incorrect admin token or Admin is suspended or \nAdmin and user are from differente institutions\n"
+          },
+          "404": {
+            "description": "Resource not found"
+          }
+        }
+      }
+    },
+    "/workout/update/{workout_id}": {
+      "put": {
+        "parameters": [
+          {
+            "name": "workout_id",
+            "type": "integer",
+            "required": true,
+            "in": "path"
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Program"
+            }
+          },
+          "401": {
+            "description": "api key not provided or AT is suspended"
+          },
+          "403": {
+            "description": "Incorrect admin token or Admin is suspended or \nAdmin and user are from differente institutions\n"
+          },
+          "404": {
+            "description": "Resource not found"
+          }
+        }
+      }
+    },
+    "/workout/exercise/{exercise_id}/result": {
+      "post": {
+        "security": [
+          {
+            "machineAuth": []
+          }
+        ],
+        "description": "Saving or updating Workout Exercise Result",
+        "parameters": [
+          {
+            "name": "exercise_id",
+            "type": "string",
+            "required": true,
+            "in": "path"
+          },
+          {
+            "name": "balance",
+            "type": "number",
+            "format": "double",
+            "in": "formData"
+          },
+          {
+            "name": "movement",
+            "type": "number",
+            "format": "double",
+            "in": "formData"
+          },
+          {
+            "name": "completed",
+            "type": "boolean",
+            "in": "formData"
+          },
+          {
+            "name": "range",
+            "type": "number",
+            "format": "double",
+            "in": "formData"
+          },
+          {
+            "name": "symmetry",
+            "type": "number",
+            "format": "double",
+            "in": "formData"
+          },
+          {
+            "name": "strength",
+            "type": "number",
+            "format": "double",
+            "in": "formData"
+          },
+          {
+            "name": "qom",
+            "type": "number",
+            "format": "double",
+            "in": "formData"
+          },
+          {
+            "name": "time",
+            "type": "integer",
+            "in": "formData"
+          },
+          {
+            "name": "date",
+            "type": "string",
+            "format": "date-time",
+            "in": "formData",
+            "required": true
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WorkoutExerciseResult"
+              }
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of keys"
+          },
+          "422": {
+            "description": "validation error"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "machineAuth": []
+          }
+        ],
+        "description": "Saving or updating Checkup Exercise Result",
+        "parameters": [
+          {
+            "name": "exercise_id",
+            "type": "string",
+            "required": true,
+            "in": "path"
+          },
+          {
+            "name": "file",
+            "type": "string",
+            "description": "Content which will be saved in S3",
+            "in": "formData"
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WorkoutExerciseResult"
+              }
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of keys"
+          },
+          "422": {
+            "description": "validation error"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/public/users/login": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "type": "string",
+            "in": "body"
+          },
+          {
+            "name": "password",
+            "type": "string",
+            "in": "body"
+          },
+          {
+            "name": "device_id",
+            "type": "string",
+            "in": "body"
+          },
+          {
+            "name": "hardware_device",
+            "type": "string",
+            "in": "body"
+          },
+          {
+            "name": "hardware_model",
+            "type": "string",
+            "in": "body"
+          },
+          {
+            "name": "hardware_product",
+            "type": "string",
+            "in": "body"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "object",
+              "additionalProperties": false,
+              "minProperties": 5,
+              "properties": {
+                "first_name": {
+                  "type": "string"
+                },
+                "last_name": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "authorization": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    },
+                    "expiration_token": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "total_results": {
+                  "$ref": "#/definitions/PublicTotalResult"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "invalid email or password"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/public/user/info": {
+      "post": {
+        "security": [
+          {
+            "publicUserAuth": []
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "object",
+              "additionalProperties": false,
+              "minProperties": 4,
+              "properties": {
+                "first_name": {
+                  "type": "string"
+                },
+                "last_name": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "total_results": {
+                  "$ref": "#/definitions/PublicTotalResult"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "invalid token or expiration_date < current_date "
+          },
+          "403": {
+            "description": "user is suspended"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/public/gyms/nearest": {
+      "post": {
+        "security": [
+          {
+            "publicUserAuth": []
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "longitude",
+            "type": "number",
+            "format": "float",
+            "in": "body"
+          },
+          {
+            "name": "latitude",
+            "type": "number",
+            "format": "float",
+            "in": "body"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "full_address": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "about": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "longitude": {
+                    "oneOf": [
+                      {
+                        "type": "number",
+                        "format": "float"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "latitude": {
+                    "oneOf": [
+                      {
+                        "type": "number",
+                        "format": "float"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "images": {
+                    "type": "object",
+                    "properties": {
+                      "xxxhpdi": {
+                        "type": "string"
+                      },
+                      "hpdi": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "distance": {
+                    "oneOf": [
+                      {
+                        "type": "number",
+                        "format": "float"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "opening_hours": {
+                    "type": "object",
+                    "properties": {
+                      "monday": {
+                        "$ref": "#/definitions/OpeningDay"
+                      },
+                      "tuesday": {
+                        "$ref": "#/definitions/OpeningDay"
+                      },
+                      "wednesday": {
+                        "$ref": "#/definitions/OpeningDay"
+                      },
+                      "thursday": {
+                        "$ref": "#/definitions/OpeningDay"
+                      },
+                      "friday": {
+                        "$ref": "#/definitions/OpeningDay"
+                      },
+                      "saturday": {
+                        "$ref": "#/definitions/OpeningDay"
+                      },
+                      "sunday": {
+                        "$ref": "#/definitions/OpeningDay"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "invalid token or expiration_date < current_date "
+          },
+          "403": {
+            "description": "user is suspended"
+          },
+          "422": {
+            "description": "invalid latitude or longitude"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/public/user/workout_result": {
+      "post": {
+        "security": [
+          {
+            "publicUserAuth": []
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "start_date",
+            "type": "string",
+            "format": "date-time",
+            "required": "true",
+            "in": "body"
+          },
+          {
+            "name": "end_date",
+            "type": "string",
+            "format": "date-time",
+            "required": "true",
+            "in": "body"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "total_results": {
+                  "$ref": "#/definitions/PublicTotalResult"
+                },
+                "workout_results": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "format": "int32"
+                      },
+                      "date": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "workout_id": {
+                        "type": "integer",
+                        "format": "int32"
+                      },
+                      "balance": {
+                        "$ref": "#/definitions/WorkoutIndicator"
+                      },
+                      "movement": {
+                        "$ref": "#/definitions/WorkoutIndicator"
+                      },
+                      "range": {
+                        "$ref": "#/definitions/WorkoutIndicator"
+                      },
+                      "strength": {
+                        "$ref": "#/definitions/WorkoutIndicator"
+                      },
+                      "symmetry": {
+                        "$ref": "#/definitions/WorkoutIndicator"
+                      },
+                      "qom": {
+                        "$ref": "#/definitions/WorkoutIndicator"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    }
+                  }
+                }
+              },
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "full_address": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "about": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "longitude": {
+                    "oneOf": [
+                      {
+                        "type": "number",
+                        "format": "float"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "latitude": {
+                    "oneOf": [
+                      {
+                        "type": "number",
+                        "format": "float"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "images": {
+                    "type": "object",
+                    "properties": {
+                      "xxxhdpi": {
+                        "type": "string"
+                      },
+                      "hdpi": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "invalid token or expiration_date < current_date "
+          },
+          "403": {
+            "description": "user is suspended"
+          },
+          "422": {
+            "description": "invalid latitude or longitude"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/users/{user_id}/latest_checkup": {
+      "get": {
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "checkup_id": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "balance": {
+                  "type": "number",
+                  "format": "double"
+                },
+                "range": {
+                  "type": "number",
+                  "format": "double"
+                },
+                "movement": {
+                  "type": "number",
+                  "format": "double"
+                },
+                "strength": {
+                  "type": "number",
+                  "format": "double"
+                },
+                "symmetry": {
+                  "type": "number",
+                  "format": "double"
+                },
+                "qom": {
+                  "type": "number",
+                  "format": "double"
+                },
+                "time": {
+                  "type": "integer"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updated_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "api key not provided"
+          },
+          "403": {
+            "description": "invalid pair of AT & Admin keys"
+          },
+          "404": {
+            "description": "Invalid user_id or workout or workout_result are missed"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "AdminSettings": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string"
+        },
+        "unit_of_weight": {
+          "type": "string"
+        },
+        "unit_of_length": {
+          "type": "string"
+        }
+      }
+    },
+    "AdminTablet": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "gym_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "hash_id": {
+          "type": "string"
+        },
+        "secure_token": {
+          "type": "string"
+        },
+        "tablet_identifier": {
+          "oneOf":[
+            {
+              "type": "string"
+            }, {
+              "type": "null"
+            }
+          ]
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        },
+        "admin_tablet_state": {
+          "oneOf": [
+            {
+              "type": "null"
+            }, {
+              "$ref": "#/definitions/AdminTabletState"
+            }
+          ]
+        }
+      }
+    },
+    "AdminTabletState": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "admin_tablet_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "gyms_admin_id": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "format": "int32"
+            }, {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "type": "boolean"
+        },
+        "uptime": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "total_use_time": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "last_used": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            }, {
+              "type": "null"
+            }
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "AdminTabletEventMarker": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "admin_tablet_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "gyms_admin_id": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "format": "int32"
+            }, {
+              "type": "null"
+            }
+          ]
+        },
+        "type": {
+          "oneOf": [
+            {
+              "type": "string"
+            }, {
+              "type": "null"
+            }
+          ]
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "string"
+            }, {
+              "type": "null"
+            }
+          ]
+        },
+        "data": {
+          "description": "JSON string",
+          "oneOf": [
+            {
+              "type": "string"
+            }, {
+              "type": "null"
+            }
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Checkup": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "user_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "combined_score": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "start_date": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            }, {
+              "type": "null"
+            }
+          ]
+        },
+        "program_level": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "checkup_exercises": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CheckupExercises"
+          }
+        }
+      }
+    },
+    "CheckupExercises": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "checkup_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "exercise_id": {
+          "type": "integer"
+        },
+        "number_of_repetitions": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "machine_type": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "curve": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "video": {
+          "type": "string"
+        },
+        "sensor": {
+          "type": "integer"
+        },
+        "show_video": {
+          "type": "boolean"
+        },
+        "body_zones": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "settings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ZSetting"
+          }
+        },
+        "body_positions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ZBodyPosition"
+          }
+        },
+        "feet_positions": {
+          "type": "string"
+        },
+        "normatives": {
+          "$ref": "#/definitions/Normative"
+        },
+        "min_range": {
+          "type": "number",
+          "format": "double"
+        },
+        "max_range": {
+          "type": "number",
+          "format": "double"
+        },
+        "rom": {
+          "type": "number",
+          "format": "integer"
+        },
+        "tempo": {
+          "type": "number",
+          "format": "double"
+        },
+        "workout_time": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "CheckupExerciseResult": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "checkup_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "checkup_exercise_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "balance": {
+          "type": "number",
+          "format": "double"
+        },
+        "range": {
+          "type": "number",
+          "format": "double"
+        },
+        "movement": {
+          "type": "number",
+          "format": "double"
+        },
+        "strength": {
+          "type": "number",
+          "format": "double"
+        },
+        "symmetry": {
+          "type": "number",
+          "format": "double"
+        },
+        "qom": {
+          "type": "number",
+          "format": "double"
+        },
+        "time": {
+          "type": "integer"
+        },
+        "data": {
+          "description": "Key of S3 amazon file",
+          "oneOf": [
+            {
+              "type": "string"
+            }, {
+              "type": "null"
+            }
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "CheckupResult": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "checkup_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "balance": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "range": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "movement": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "strength": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "symmetry": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "qom": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "ZBodyPosition": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "position_name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "ZSetting": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "setting_id": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "option": {
+          "type": "string"
+        },
+        "option_description": {
+          "type": "string"
+        }
+      }
+    },
+    "Dashboard": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 5,
+      "properties": {
+        "score": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "last_checkup_date": {
+          "oneOf": [
+            {
+              "type": "null"
+            }, {
+              "type": "string",
+              "format": "date-time"
+            }
+          ]
+        },
+        "last_workout_date": {
+          "oneOf": [
+            {
+              "type": "null"
+            }, {
+              "type": "string",
+              "format": "date-time"
+            }
+          ]
+        },
+        "checkup": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/Checkup"
+            }
+          ]
+        },
+        "program": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/Program"
+            }
+          ]
+        }
+      }
+    },
+    "Program": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "user_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "total_time": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "program_level": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "exercises": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WorkoutExercises"
+          }
+        }
+      }
+    },
+    "WorkoutExercises": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "exercise_id": {
+          "type": "integer"
+        },
+        "category": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "time": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "completed": {
+          "type": "boolean"
+        },
+        "workout_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "number_of_repetitions": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "machine_type": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "curve": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "video": {
+          "type": "string"
+        },
+        "sensor": {
+          "type": "integer"
+        },
+        "show_video": {
+          "type": "boolean"
+        },
+        "body_zones": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "settings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ZSetting"
+          }
+        },
+        "body_positions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ZBodyPosition"
+          }
+        },
+        "normatives": {
+          "$ref": "#/definitions/Normative"
+        },
+        "min_range": {
+          "type": "number",
+          "format": "double"
+        },
+        "max_range": {
+          "type": "number",
+          "format": "double"
+        },
+        "rom": {
+          "type": "number",
+          "format": "integer"
+        },
+        "tempo": {
+          "type": "number",
+          "format": "double"
+        },
+        "workout_time": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Normative": {
+      "type": "object",
+      "properties": {
+        "rom": {
+          "type": "object",
+          "properties": {
+            "max": {
+              "oneOf": [
+                {
+                  "type": "null"
+                }, {
+                  "type": "number",
+                  "format": "float"
+                }
+              ]
+            },
+            "min": {
+              "oneOf": [
+                {
+                  "type": "number",
+                  "format": "float"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        "strength": {
+          "type": "object",
+          "properties": {
+            "max": {
+              "oneOf": [
+                {
+                  "type": "null"
+                }, {
+                  "type": "number",
+                  "format": "float"
+                }
+              ]
+            },
+            "min": {
+              "oneOf": [
+                {
+                  "type": "null"
+                }, {
+                  "type": "number",
+                  "format": "float"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "UserInfo": {
+      "type": "object",
+      "properties": {
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "coupon": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "date_of_birthday": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "last_training_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "last_check_up_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "training_score": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "postal_address_line_1": {
+          "type": "string"
+        },
+        "postal_address_line_2": {
+          "type": "string"
+        },
+        "address_line_1": {
+          "type": "string"
+        },
+        "address_line_2": {
+          "type": "string"
+        },
+        "post_address_as_main_address": {
+          "type": "boolean"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "zip_code": {
+          "type": "string"
+        },
+        "emergency_contact_name": {
+          "type": "string"
+        },
+        "emergency_contact_phone": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "payment_status": {
+          "type": "boolean"
+        },
+        "show_disclaimer": {
+          "type": "boolean"
+        },
+        "institutions_user": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 3,
+          "properties": {
+            "user_tag": {
+              "type": "string"
+            },
+            "status": {
+              "type": "integer"
+            },
+            "gym_id": {
+              "type": "integer"
+            }
+          }
+        },
+        "body_measurements": {
+          "$ref": "#/definitions/BodyMeasurements"
+        },
+        "settings": {
+          "$ref": "#/definitions/Settings"
+        },
+        "questionnaires": {
+          "$ref": "#/definitions/Questionnaires"
+        }
+      }
+    },
+    "UserInfoAT": {
+      "type": "object",
+      "properties": {
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "date_of_birthday": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "last_training_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "last_check_up_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "training_score": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "postal_address_line_1": {
+          "type": "string"
+        },
+        "postal_address_line_2": {
+          "type": "string"
+        },
+        "address_line_1": {
+          "type": "string"
+        },
+        "address_line_2": {
+          "type": "string"
+        },
+        "post_address_as_main_address": {
+          "type": "boolean"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "zip_code": {
+          "type": "string"
+        },
+        "emergency_contact_name": {
+          "type": "string"
+        },
+        "emergency_contact_phone": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "institutions_user": {
+          "type": "object",
+          "properties": {
+            "user_tag": {
+              "type": "string"
+            },
+            "status": {
+              "type": "integer"
+            }
+          }
+        },
+        "body_measurements": {
+          "$ref": "#/definitions/BodyMeasurements"
+        },
+        "settings": {
+          "$ref": "#/definitions/Settings"
+        },
+        "questionnaires": {
+          "$ref": "#/definitions/Questionnaires"
+        },
+        "current_workout": {
+          "type": "object"
+        },
+        "last_checkup_result": {
+          "$ref": "#/definitions/CheckupResult"
+        }
+      }
+    },
+    "Settings": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string"
+        },
+        "unit_of_weight": {
+          "type": "string"
+        },
+        "unit_of_length": {
+          "type": "string"
+        },
+        "notifications": {
+          "$ref": "#/definitions/UserNotifications"
+        }
+      }
+    },
+    "StateEntry": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "user_id": {
+          "oneOf": [{
+            "type": "integer",
+            "format": "int32"
+          }, {
+            "type": "null"
+          }]
+        },
+        "ip": {
+          "type": "string"
+        },
+        "machine_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "exercise_time_left": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "format": "int32"
+            }, {
+              "type": "null"
+            }
+          ]
+        },
+        "program_time_left": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "format": "int32"
+            }, {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "type": "boolean"
+        },
+        "uptime": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "client_sessions": {
+          "oneOf": [
+            {
+              "type": "string"
+            }, {
+              "type": "null"
+            }
+          ]
+        },
+        "total_use_time": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "last_used": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            }, {
+              "type": "null"
+            }
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Machine": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "ip": {
+          "type": "string",
+          "format": "ip"
+        },
+        "gym_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "hash_id": {
+          "type": "string"
+        },
+        "secure_token": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        },
+        "machine_state": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/StateEntry"
+            }, {
+              "type": "null"
+            }
+          ]
+        },
+        "machine_type": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "name": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "MachineEventMarker": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "machine_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "user_id": {
+          "oneOf": [
+            {
+            "type": "integer",
+            "format": "int32"
+            }, {
+              "type": "null"
+            }
+          ]
+        },
+        "type": {
+          "oneOf": [
+            {
+              "type": "string"
+            }, {
+              "type": "null"
+            }
+          ]
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "string"
+            }, {
+              "type": "null"
+            }
+          ]
+        },
+        "data": {
+          "description": "JSON string",
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "json"
+            }, {
+              "type": "null"
+            }
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "BodyMeasurements": {
+      "type": "object",
+      "properties": {
+        "height": {
+          "type": "number",
+          "format": "double"
+        },
+        "weight": {
+          "type": "number",
+          "format": "double"
+        },
+        "chest": {
+          "type": "number",
+          "format": "double"
+        },
+        "arm": {
+          "type": "number",
+          "format": "double"
+        },
+        "waist": {
+          "type": "number",
+          "format": "double"
+        },
+        "hips": {
+          "type": "number",
+          "format": "double"
+        },
+        "thigh": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "Questionnaires": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "illness": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "json"
+            }, {
+              "type": "null"
+            }
+          ]
+        },
+        "answers": {
+          "type": "object",
+          "properties": {
+            "vigorous_work": {
+              "type": "object",
+              "properties": {
+                "vigorous_phisical_activity": {
+                  "type": "string",
+                  "enum": [
+                    "yes",
+                    "no"
+                  ]
+                },
+                "vigorous_work_days_per_week": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "vigorous_work_time_per_day": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "moderate_work": {
+              "type": "object",
+              "properties": {
+                "moderate_work_intesity_activity": {
+                  "type": "string",
+                  "enum": [
+                    "yes",
+                    "no"
+                  ]
+                },
+                "moderate_work_days_per_week": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "moderate_work_time_per_day": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "travel": {
+              "type": "object",
+              "properties": {
+                "walk_or_bike_for_more_than_10_min": {
+                  "type": "string",
+                  "enum": [
+                    "yes",
+                    "no"
+                  ]
+                },
+                "travel_days_per_week": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "travel_time_per_day": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "vigorous_recreation": {
+              "type": "object",
+              "properties": {
+                "vigorous_intensity_sport": {
+                  "type": "string",
+                  "enum": [
+                    "yes",
+                    "no"
+                  ]
+                },
+                "vigorous_recreation_days_per_week": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "vigorous_recreation_time_per_day": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "moderate_recreation": {
+              "type": "object",
+              "properties": {
+                "moderate_intensity_sport": {
+                  "type": "string",
+                  "enum": [
+                    "yes",
+                    "no"
+                  ]
+                },
+                "moderate_recreation_days_per_week": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "moderate_recreation_time_per_day": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "sedentiary": {
+              "type": "object",
+              "properties": {
+                "sedentiary_sitting_or_reclining_per_day": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "medical": {
+              "type": "object",
+              "properties": {
+                "cardio_vascular_conditions": {
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "seriously",
+                    "moderately"
+                  ]
+                },
+                "liver_conditions": {
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "seriously",
+                    "moderately"
+                  ]
+                },
+                "kidney_conditions": {
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "seriously",
+                    "moderately"
+                  ]
+                },
+                "endocrine_system_conditions": {
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "seriously",
+                    "moderately"
+                  ]
+                },
+                "oncologic_conditions": {
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "seriously",
+                    "moderately"
+                  ]
+                },
+                "operations_in_the_past_3_months": {
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "seriously",
+                    "moderately"
+                  ]
+                }
+              }
+            },
+            "pain_assessment": {
+              "type": "object",
+              "properties": {
+                "wrists_and_hands": {
+                  "type": "integer",
+                  "format": "int32",
+                  "minValue": 0,
+                  "maxValue": 9
+                },
+                "shoulders": {
+                  "type": "integer",
+                  "format": "int32",
+                  "enum": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9
+                  ]
+                },
+                "shoulder_blades": {
+                  "type": "integer",
+                  "format": "int32",
+                  "enum": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9
+                  ]
+                },
+                "elbows": {
+                  "type": "integer",
+                  "format": "int32",
+                  "enum": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9
+                  ]
+                },
+                "ankles_and_feet": {
+                  "type": "integer",
+                  "format": "int32",
+                  "enum": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9
+                  ]
+                },
+                "hips": {
+                  "type": "integer",
+                  "format": "int32",
+                  "enum": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9
+                  ]
+                },
+                "knees": {
+                  "type": "integer",
+                  "format": "int32",
+                  "enum": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9
+                  ]
+                },
+                "cervical": {
+                  "type": "integer",
+                  "format": "int32",
+                  "enum": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9
+                  ]
+                },
+                "diaphragm": {
+                  "type": "integer",
+                  "format": "int32",
+                  "enum": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9
+                  ]
+                },
+                "lumbar": {
+                  "type": "integer",
+                  "format": "int32",
+                  "enum": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9
+                  ]
+                },
+                "pelvis": {
+                  "type": "integer",
+                  "format": "int32",
+                  "enum": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9
+                  ]
+                },
+                "thoracic": {
+                  "type": "integer",
+                  "format": "int32",
+                  "enum": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Questions": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 8,
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "parent_text_key": {
+          "oneOf": [
+            {
+              "type": "string"
+            }, {
+              "type": "null"
+            }
+          ]
+        },
+        "category": {
+          "type": "string"
+        },
+        "text_key": {
+          "type": "string"
+        },
+        "value_type": {
+          "type": "string"
+        },
+        "position": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "format": "int32"
+            }, {
+              "type": "null"
+            }
+          ]
+        },
+        "code": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "userWithUserTag": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32,"
+        },
+        "email": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "date_of_birthday": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "last_training_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "last_check_up_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "training_score": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "postal_address_line_1": {
+          "type": "string"
+        },
+        "postal_address_line_2": {
+          "type": "string"
+        },
+        "address_line_1": {
+          "type": "string"
+        },
+        "address_line_2": {
+          "type": "string"
+        },
+        "post_address_as_main_address": {
+          "type": "boolean"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "zip_code": {
+          "type": "string"
+        },
+        "emergency_contact_name": {
+          "type": "string"
+        },
+        "emergency_contact_phone": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "institutions_users": {
+          "type": "object",
+          "properties": {
+            "user_tag": {
+              "type": "string"
+            },
+            "status": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    },
+    "gymUsers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/userWithUserTag"
+      }
+    },
+    "WorkoutExerciseResult": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "workout_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "workout_exercise_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "balance": {
+          "type": "number",
+          "format": "double"
+        },
+        "range": {
+          "type": "number",
+          "format": "double"
+        },
+        "movement": {
+          "type": "number",
+          "format": "double"
+        },
+        "strength": {
+          "type": "number",
+          "format": "double"
+        },
+        "symmetry": {
+          "type": "number",
+          "format": "double"
+        },
+        "qom": {
+          "type": "number",
+          "format": "double"
+        },
+        "time": {
+          "type": "integer"
+        },
+        "data": {
+          "type": "string",
+          "description": "Key of S3 amazon file"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "PublicTotalResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "total_time": {
+          "type": "integer",
+          "format": "int32",
+          "required": "true"
+        },
+        "sessions": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "tests_completed": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "WorkoutIndicator": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "format": "float"
+        },
+        "min": {
+          "type": "number",
+          "format": "float"
+        },
+        "max": {
+          "type": "number",
+          "format": "float"
+        }
+      }
+    },
+    "OpeningDay": {
+      "type": "object",
+      "properties": {
+        "open": {
+          "type": "string"
+        },
+        "start_hours": {
+          "type": "string"
+        },
+        "start_minutes": {
+          "type": "string"
+        },
+        "end_hours": {
+          "type": "string"
+        },
+        "end_minutes": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "machineAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "Authorization token - machine hash_id + machine secure_token"
+    },
+    "machineUserAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "Authorization token - machine hash_id + machine secure_token + user RFID key"
+    },
+    "adminTabletAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "Authorization token - AT hash_id + AT secure_token + device_id"
+    },
+    "adminAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "Authorization token - AT hash_id + AT secure_token + device_id + admin token"
+    },
+    "publicUserAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "Authorization for public api"
+    }
+  }
+}

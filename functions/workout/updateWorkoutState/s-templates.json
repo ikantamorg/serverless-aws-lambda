@@ -1,0 +1,9 @@
+{
+  "requestTemplate": {
+    "application/json": {
+      "principalId": "$context.authorizer.principalId",
+      "requestParams": "$input.json('$')",
+      "workout_id": "$input.params('workout_id')"
+    }
+  }
+}

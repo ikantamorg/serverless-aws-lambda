@@ -1,0 +1,8 @@
+{
+  "settingsPutRequestTemplate": {
+    "application/json": {
+      "userIdAndMachineId": "$context.authorizer.principalId",
+      "queryParams": "$input.json('$')"
+    }
+  }
+}

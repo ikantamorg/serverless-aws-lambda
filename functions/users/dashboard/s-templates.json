@@ -1,0 +1,7 @@
+{
+  "getUserDashboardTemplate": {
+    "application/json": {
+      "userIdAndMachineId": "$context.authorizer.principalId"
+    }
+  }
+}

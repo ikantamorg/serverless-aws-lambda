@@ -1,0 +1,47 @@
+{
+  "name": "completeOutDatedWorkout",
+  "runtime": "nodejs4.3",
+  "description": "Serverless Lambda function for project: blum-serverless",
+  "customName": false,
+  "customRole": false,
+  "handler": "handler.handler",
+  "timeout": 60,
+  "memorySize": 128,
+  "authorizer": {},
+  "custom": {
+    "optimize": {
+      "exclude": [ "aws-sdk" ],
+      "transforms": [
+        {
+          "name": "babelify",
+          "opts": {
+            "presets": [
+              "es2015"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "endpoints": [],
+  "events": [
+    {
+      "name": "CompleteWorkout",
+      "type": "schedule",
+      "config": {
+        "enabled": true,
+        "schedule": "rate(30 minutes)"
+      }
+    }
+  ],
+  "environment": {
+    "SERVERLESS_PROJECT": "${project}",
+    "SERVERLESS_STAGE": "${stage}",
+    "SERVERLESS_REGION": "${region}",
+    "SERVERLESS_DATABASE": "${database}"
+  },
+  "vpc": {
+    "securityGroupIds": [],
+    "subnetIds": []
+  }
+}

@@ -1,0 +1,25 @@
+# You can use any Docker image from Docker Hub or your own container registry
+image: zigel2/lambda:0.0.1
+
+pipelines:
+  default:
+    - step:
+        script:  # Modify the commands below to build and test your repository.
+          - /db_setup.sh postgres &
+          - echo $BITBUCKET_PRIVATE > ~/.ssh/bitbucket.key && chmod 600 ~/.ssh/bitbucket.key &&
+            /script.rb ~/.ssh/bitbucket.key &&
+            cp config/zoho_config.js.dist config/zoho_config.js &&
+            cp config/app_test.js.dist config/app.js &&
+            PROJECT_ROOT="$(pwd)"
+          - git clone --branch="develop" --depth 50 git@bitbucket.org:blumsoft/migrationtool.git
+          - cd migrationtool && cp db/config.yml.dist db/config.yml &&
+          - bundle
+          - rake db:create RAILS_ENV=test && rake db:migrate RAILS_ENV=test && rake db:seed RAILS_ENV=test && cd $PROJECT_ROOT
+          - npm -g install npm@latest
+          - npm install
+          - npm install --global eslint-config-airbnb@10.0.0 eslint-config-airbnb-base@5.0.1 eslint-plugin-react@6.2.0 eslint-plugin-import@1.14.0 eslint-plugin-jsx-a11y@2.2.0 eslint@3.2.2 babel-eslint
+          - npm install --global mocha babel-register
+          - eslint ./
+          - mocha --compilers js:babel-register --reporter=spec --grep @api --invert
+          - bash ./test/each_folder_test.sh
+          - HOST=$DEV_HOST mocha --compilers js:babel-register --reporter=spec --grep @api

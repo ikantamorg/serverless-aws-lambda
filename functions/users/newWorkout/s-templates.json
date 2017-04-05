@@ -1,0 +1,7 @@
+{
+  "newWorkoutTemplate": {
+    "application/json": {
+      "principalId": "$context.authorizer.principalId"
+    }
+  }
+}

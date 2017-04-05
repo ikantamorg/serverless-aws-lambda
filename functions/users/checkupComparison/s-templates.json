@@ -1,0 +1,8 @@
+{
+  "getUserInfoTemplate": {
+    "application/json": {
+      "userIdAndMachineId": "$context.authorizer.principalId",
+      "date" : "$input.params('date')"
+    }
+  }
+}

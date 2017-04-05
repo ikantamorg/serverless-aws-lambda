@@ -1,0 +1,8 @@
+{
+  "TestTemplate": {
+    "application/json": {
+      "queryParams": "$input.json('$')",
+      "adminIdAndAdminTabletId": "$context.authorizer.principalId"
+    }
+  }
+}
